@@ -426,10 +426,6 @@ function format_conversation(conversation_data) {
         context.pm_url = last_msg.pm_with_url;
         context.is_group = last_msg.display_recipient.length > 2;
 
-        // Display in most recent sender first order
-        all_senders = last_msg.display_recipient;
-        senders = all_senders.slice(-MAX_AVATAR).map((sender) => sender.id);
-
         if (!context.is_group) {
             const user_id = Number.parseInt(last_msg.to_user_ids, 10);
             const user = people.get_by_user_id(user_id);
@@ -442,6 +438,9 @@ function format_conversation(conversation_data) {
             }
         }
 
+        // Display in most recent sender first order
+        all_senders = recent_senders.get_pm_recent_senders(context.user_ids_string);
+        senders = all_senders.slice(-MAX_AVATAR);
         // Collect extra senders fullname for tooltip.
         extra_sender_ids = all_senders.slice(0, -MAX_AVATAR);
         displayed_other_senders = extra_sender_ids
